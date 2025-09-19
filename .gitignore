@@ -1,0 +1,73 @@
+# =====================================================================
+# ======================== ARCHIVOS SENSIBLES =========================
+# =====================================================================
+# NUNCA subas estos archivos a tu repositorio. Contienen secretos.
+
+# Archivo principal de variables de entorno.
+.env
+
+# Archivos de entorno para diferentes etapas (desarrollo, producción, etc.).
+.env.*
+!/.env.example # Excluye .env.example para que los nuevos desarrolladores sepan qué variables se necesitan.
+
+# ¡CRÍTICO! La clave de servicio de Firebase Admin da control total sobre tu proyecto de Firebase.
+serviceAccountKey.json
+
+
+# =====================================================================
+# =========================== DEPENDENCIAS ============================
+# =====================================================================
+# Las dependencias se instalan con 'npm install' y no deben estar en el control de versiones.
+# Ocupan mucho espacio y varían entre sistemas operativos.
+node_modules/
+
+
+# =====================================================================
+# ========================= LOGS Y REPORTES ===========================
+# =====================================================================
+# Archivos de registro generados por la aplicación o por npm/yarn.
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Directorio de reportes de cobertura de pruebas.
+coverage/
+
+
+# =====================================================================
+# ===================== ARCHIVOS DE BUILD/DIST ========================
+# =====================================================================
+# Directorios comunes para el código transpilado o compilado (si usaras TypeScript, por ejemplo).
+dist/
+build/
+.next/
+.nuxt/
+
+
+# =====================================================================
+# ================== ARCHIVOS DE IDEs Y EDITORES ======================
+# =====================================================================
+# Configuraciones específicas del entorno de desarrollo local de cada programador.
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# =====================================================================
+# ================= ARCHIVOS DEL SISTEMA OPERATIVO ====================
+# =====================================================================
+# Archivos de metadatos generados por macOS y Windows.
+.DS_Store
+Thumbs.db
+/generated/prisma

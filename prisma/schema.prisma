@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model categorias {
+  id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                String?                     @db.Uuid
+  nombre                    String
+  tipo                      tipo_transaccion
+  icono                     String?
+  color                     String?
+  importancia               nivel_importancia_gasto?
+  usuarios                  usuarios?                   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  transacciones             transacciones[]
+  transacciones_recurrentes transacciones_recurrentes[]
+
+  @@unique([usuario_id, nombre, tipo])
+  @@index([usuario_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cuentas {
+  id                                                     String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                                             String                      @db.Uuid
+  nombre                                                 String
+  tipo                                                   tipo_cuenta
+  moneda                                                 String                      @db.Char(3)
+  saldo_inicial                                          Decimal                     @default(0.00) @db.Decimal(15, 2)
+  descripcion                                            String?
+  created_at                                             DateTime                    @default(now()) @db.Timestamptz(6)
+  usuarios                                               usuarios                    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  transacciones_transacciones_cuenta_destino_idTocuentas transacciones[]             @relation("transacciones_cuenta_destino_idTocuentas")
+  transacciones_transacciones_cuenta_idTocuentas         transacciones[]             @relation("transacciones_cuenta_idTocuentas")
+  transacciones_recurrentes                              transacciones_recurrentes[]
+
+  @@index([usuario_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model deudas {
+  id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                String                      @db.Uuid
+  nombre                    String
+  moneda                    String                      @db.Char(3)
+  monto_total               Decimal                     @db.Decimal(15, 2)
+  saldo_pendiente           Decimal                     @db.Decimal(15, 2)
+  monto_total_base          Decimal                     @db.Decimal(15, 2)
+  saldo_pendiente_base      Decimal                     @db.Decimal(15, 2)
+  tasa_interes_anual        Decimal?                    @db.Decimal(5, 2)
+  pago_minimo_mensual       Decimal?                    @db.Decimal(15, 2)
+  fecha_adquisicion         DateTime                    @db.Date
+  fecha_limite_pago         Int?                        @db.SmallInt
+  estado                    estado_deuda                @default(activa)
+  created_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  usuarios                  usuarios                    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  transacciones             transacciones[]
+  transacciones_recurrentes transacciones_recurrentes[]
+
+  @@index([usuario_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model transacciones {
+  id                                               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                                       String           @db.Uuid
+  cuenta_id                                        String           @db.Uuid
+  categoria_id                                     String?          @db.Uuid
+  deuda_id                                         String?          @db.Uuid
+  tipo                                             tipo_transaccion
+  monto                                            Decimal          @db.Decimal(15, 2)
+  moneda                                           String           @db.Char(3)
+  tasa_cambio                                      Decimal?         @db.Decimal(15, 6)
+  monto_base                                       Decimal          @db.Decimal(15, 2)
+  descripcion                                      String?
+  fecha                                            DateTime         @db.Timestamptz(6)
+  metadatos                                        Json?
+  cuenta_destino_id                                String?          @db.Uuid
+  created_at                                       DateTime         @default(now()) @db.Timestamptz(6)
+  categorias                                       categorias?      @relation(fields: [categoria_id], references: [id], onUpdate: NoAction)
+  cuentas_transacciones_cuenta_destino_idTocuentas cuentas?         @relation("transacciones_cuenta_destino_idTocuentas", fields: [cuenta_destino_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cuentas_transacciones_cuenta_idTocuentas         cuentas          @relation("transacciones_cuenta_idTocuentas", fields: [cuenta_id], references: [id], onUpdate: NoAction)
+  deudas                                           deudas?          @relation(fields: [deuda_id], references: [id], onUpdate: NoAction)
+  usuarios                                         usuarios         @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([categoria_id])
+  @@index([cuenta_id])
+  @@index([deuda_id])
+  @@index([fecha])
+  @@index([usuario_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model transacciones_recurrentes {
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id        String           @db.Uuid
+  cuenta_id         String           @db.Uuid
+  categoria_id      String?          @db.Uuid
+  deuda_id          String?          @db.Uuid
+  tipo              tipo_transaccion
+  monto             Decimal          @db.Decimal(15, 2)
+  moneda            String           @db.Char(3)
+  descripcion       String?
+  frecuencia        String
+  intervalo         Int              @default(1)
+  fecha_inicio      DateTime         @db.Timestamptz(6)
+  fecha_fin         DateTime?        @db.Timestamptz(6)
+  proxima_ejecucion DateTime         @db.Timestamptz(6)
+  is_active         Boolean?         @default(true)
+  categorias        categorias?      @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cuentas           cuentas          @relation(fields: [cuenta_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  deudas            deudas?          @relation(fields: [deuda_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  usuarios          usuarios         @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([proxima_ejecucion])
+  @@index([usuario_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model usuarios {
+  id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firebase_uid              String                      @unique
+  email                     String                      @unique
+  nombre                    String?
+  foto_url                  String?
+  moneda_base               String                      @default("GTQ") @db.Char(3)
+  configuraciones           Json?
+  created_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  categorias                categorias[]
+  cuentas                   cuentas[]
+  deudas                    deudas[]
+  transacciones             transacciones[]
+  transacciones_recurrentes transacciones_recurrentes[]
+}
+
+enum estado_deuda {
+  activa
+  pagada
+}
+
+enum nivel_importancia_gasto {
+  esencial
+  necesario
+  prescindible
+}
+
+enum tipo_cuenta {
+  efectivo
+  banco
+  tarjeta_credito
+  inversion
+  otro
+}
+
+enum tipo_transaccion {
+  ingreso
+  egreso
+  transferencia
+}
