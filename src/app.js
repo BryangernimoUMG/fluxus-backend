@@ -13,6 +13,12 @@ app.use(helmet());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Basic health and root endpoints for uptime checks
+app.get('/', (_req, res) => {
+	res.json({ ok: true, name: 'fluxus-backend', version: '1.0.0' });
+});
+app.get('/healthz', (_req, res) => res.send('ok'));
+
 app.use('/api/users', usersRoutes);
 app.use('/api/categories', categoryRoutes);
 

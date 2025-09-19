@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: fluxus-backend
+    env: node
+    plan: free
+    buildCommand: npm ci && npx prisma generate
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Set DATABASE_URL in the Render Dashboard or as a secret here if desired
+      # - key: DATABASE_URL
+      #   sync: false
+      # Firebase credentials: prefer base64 to avoid quoting issues
+      # - key: FIREBASE_SERVICE_ACCOUNT_BASE64
+      #   sync: false
+    healthCheckPath: /healthz
+    autoDeploy: true
