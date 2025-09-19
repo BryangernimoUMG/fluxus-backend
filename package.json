@@ -3,14 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "engines": {
-    "node": ">=18.18"
-  },
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "vercel-build": "prisma generate",
-    "postinstall": "prisma generate || echo prisma generate skipped",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
