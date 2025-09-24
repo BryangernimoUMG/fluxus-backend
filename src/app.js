@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const errorHandler = require('./middleware/error.handler');
 const usersRoutes = require('./api/users/user.routes');
 const categoryRoutes = require('./api/categories/category.routes');
+const accountRoutes = require('./api/accounts/account.routes');
+const transactionRoutes = require('./api/transactions/transaction.routes');
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.get('/healthz', (_req, res) => res.send('ok'));
 
 app.use('/api/users', usersRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/accounts', accountRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 app.use(errorHandler);
 

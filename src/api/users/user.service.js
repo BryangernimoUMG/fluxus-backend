@@ -1,5 +1,7 @@
 const prisma = require('../../config/prisma.client');
 const AppError = require('../../utils/AppError');
+const { createDefaultCategoriesForUser } = require('../categories/category.seed.service');
+const { createDefaultAccountsForUser } = require('../accounts/account.seed.service');
 
 /**
  * Upserts a user using Firebase decoded token and optional profile payload from the client.
@@ -26,6 +28,8 @@ async function getOrCreateUserFromDecoded(decoded, payload = {}) {
 		moneda_base: payload.moneda_base || payload.monedaBase,
 		configuraciones: payload.configuraciones,
 	};
+	console.log('Normalized user data:', normalized);
+	console.log('Decoded token data:', decoded);
 
 	// If name/picture come from Firebase and client didn't send overrides, use them
 	if (normalized.nombre == null && name) normalized.nombre = name;
@@ -61,6 +65,13 @@ async function getOrCreateUserFromDecoded(decoded, payload = {}) {
 	if (normalized.configuraciones !== undefined) createData.configuraciones = normalized.configuraciones;
 
 	const created = await prisma.usuarios.create({ data: createData });
+
+	// Create default items for the new user
+	await Promise.all([
+		createDefaultCategoriesForUser(created.id, prisma),
+		createDefaultAccountsForUser(created, prisma)
+	]);
+
 	return created;
 }
 
