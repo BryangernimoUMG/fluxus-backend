@@ -17,6 +17,11 @@ exports.getTransactionByIdHandler = catchAsync(async (req, res) => {
   res.json(tx);
 });
 
+exports.getLatestTransactionsHandler = catchAsync(async (req, res) => {
+  const transactions = await service.getLatestTransactions(req.user.id, req.query.limit);
+  res.json(transactions);
+});
+
 exports.updateTransactionHandler = catchAsync(async (req, res) => {
   const tx = await service.updateTransaction(req.user, req.params.id, req.body);
   res.json(tx);

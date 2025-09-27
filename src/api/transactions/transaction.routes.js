@@ -15,6 +15,9 @@ router.get('/reports/by-account', validate(schemas.byAccountSchema), ctrl.byAcco
 router.get('/reports/cashflow', validate(schemas.cashflowSchema), ctrl.cashflowHandler);
 router.get('/transfers', validate(schemas.transfersListSchema), ctrl.listTransfersHandler);
 
+// Latest transactions
+router.get('/latest', validate(schemas.latestTransactionsSchema), ctrl.getLatestTransactionsHandler);
+
 // Recurring
 router
   .route('/recurring')

@@ -1,23 +1,23 @@
 
 const defaultCategories = [
-  // Ingresos
-  { nombre: 'Salario', tipo: 'ingreso', icono: 'cash' },
-  { nombre: 'Negocios', tipo: 'ingreso', icono: 'briefcase' },
-  { nombre: 'Inversiones', tipo: 'ingreso', icono: 'trending-up' },
-  { nombre: 'Regalos', tipo: 'ingreso', icono: 'gift' },
-  { nombre: 'Otros Ingresos', tipo: 'ingreso', icono: 'add' },
+    // Ingresos
+    { nombre: 'Salario', tipo: 'ingreso', icono: 'cash', color: '#4CAF50', importancia: 'esencial' },
+    { nombre: 'Negocios', tipo: 'ingreso', icono: 'briefcase', color: '#2196F3', importancia: 'necesario' },
+    { nombre: 'Inversiones', tipo: 'ingreso', icono: 'trending-up', color: '#FF9800', importancia: 'necesario' },
+    { nombre: 'Regalos', tipo: 'ingreso', icono: 'gift', color: '#9C27B0', importancia: 'prescindible' },
+    { nombre: 'Otros Ingresos', tipo: 'ingreso', icono: 'add', color: '#607D8B', importancia: 'prescindible' },
 
-  // Egresos
-  { nombre: 'Comida', tipo: 'egreso', icono: 'fast-food' },
-  { nombre: 'Transporte', tipo: 'egreso', icono: 'bus' },
-  { nombre: 'Vivienda', tipo: 'egreso', icono: 'home' },
-  { nombre: 'Servicios', tipo: 'egreso', icono: 'water' },
-  { nombre: 'Compras', tipo: 'egreso', icono: 'cart' },
-  { nombre: 'Entretenimiento', tipo: 'egreso', icono: 'film' },
-  { nombre: 'Salud', tipo: 'egreso', icono: 'heart' },
-  { nombre: 'Educación', tipo: 'egreso', icono: 'school' },
-  { nombre: 'Deudas', tipo: 'egreso', icono: 'card' },
-  { nombre: 'Otros Gastos', tipo: 'egreso', icono: 'remove' },
+    // Egresos
+    { nombre: 'Comida', tipo: 'egreso', icono: 'fast-food', color: '#FFEB3B', importancia: 'esencial' },
+    { nombre: 'Transporte', tipo: 'egreso', icono: 'bus', color: '#00BCD4', importancia: 'necesario' },
+    { nombre: 'Vivienda', tipo: 'egreso', icono: 'home', color: '#795548', importancia: 'esencial' },
+    { nombre: 'Servicios', tipo: 'egreso', icono: 'water', color: '#03A9F4', importancia: 'necesario' },
+    { nombre: 'Compras', tipo: 'egreso', icono: 'cart', color: '#8BC34A', importancia: 'prescindible' },
+    { nombre: 'Entretenimiento', tipo: 'egreso', icono: 'film', color: '#FFC107', importancia: 'prescindible' },
+    { nombre: 'Salud', tipo: 'egreso', icono: 'heart', color: '#E57373', importancia: 'esencial' },
+    { nombre: 'Educación', tipo: 'egreso', icono: 'school', color: '#64B5F6', importancia: 'necesario' },
+    { nombre: 'Deudas', tipo: 'egreso', icono: 'card', color: '#F44336', importancia: 'esencial' },
+    { nombre: 'Otros Gastos', tipo: 'egreso', icono: 'remove', color: '#9E9E9E', importancia: 'prescindible' },
 ];
 
 /**

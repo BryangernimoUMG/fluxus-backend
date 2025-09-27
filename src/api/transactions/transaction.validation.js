@@ -109,6 +109,17 @@ const transfersListSchema = z.object({
   query: baseFilters.extend({ cuenta_id: uuid.optional() }),
 });
 
+const latestTransactionsSchema = z.object({
+  query: z.object({
+    limit: z.string()
+      .regex(/^\d+$/)
+      .transform(Number)
+      .refine((n) => n > 0 && n <= 100, 'limit debe estar entre 1 y 100')
+      .optional()
+      .default('10'),
+  }),
+});
+
 // Recurring
 const frecuenciaEnum = z.enum(['daily', 'weekly', 'monthly', 'yearly', 'diaria', 'semanal', 'mensual', 'anual']);
 
@@ -166,6 +177,7 @@ module.exports = {
   byAccountSchema,
   cashflowSchema,
   transfersListSchema,
+  latestTransactionsSchema,
   createRecurringSchema,
   listRecurringSchema,
   recurringIdSchema,

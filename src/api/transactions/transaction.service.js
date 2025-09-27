@@ -142,6 +142,30 @@ async function getTransactionById(userId, id) {
   return tx;
 }
 
+async function getLatestTransactions(userId, limit = 10) {
+  // Validate limit (max 100 to prevent abuse)
+  const validLimit = Math.min(100, Math.max(1, Number(limit)));
+  
+  const transactions = await prisma.transacciones.findMany({
+    where: { usuario_id: userId },
+    orderBy: { fecha: 'desc' }, // Most recent first
+    take: validLimit,
+    include: {
+      categorias: {
+        select: { id: true, nombre: true, tipo: true, icono: true, color: true }
+      },
+      cuentas_transacciones_cuenta_idTocuentas: {
+        select: { id: true, nombre: true, tipo: true, moneda: true }
+      },
+      cuentas_transacciones_cuenta_destino_idTocuentas: {
+        select: { id: true, nombre: true, tipo: true, moneda: true }
+      }
+    }
+  });
+
+  return transactions;
+}
+
 async function updateTransaction(user, id, payload) {
   const userId = user.id;
   const existing = await getTransactionById(userId, id);
@@ -213,7 +237,6 @@ async function deleteTransaction(userId, id) {
   await prisma.transacciones.delete({ where: { id } });
 }
 
-// Reports
 async function summary(userId, { from, to } = {}) {
   const where = {
     usuario_id: userId,
@@ -468,6 +491,7 @@ module.exports = {
   createTransaction,
   getTransactionsByUserId,
   getTransactionById,
+  getLatestTransactions,
   updateTransaction,
   deleteTransaction,
   summary,
